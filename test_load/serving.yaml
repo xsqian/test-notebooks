@@ -1,0 +1,49 @@
+kind: serving
+metadata:
+  name: serving
+  hash: 094f4ee925d3b6bef722cf7b9a6d950a338214df
+  project: clone-test-shapira
+  categories: []
+spec:
+  command: ''
+  args: []
+  image: mlrun/mlrun
+  build:
+    commands: []
+  description: ''
+  disable_auto_mount: false
+  env: []
+  resources:
+    requests:
+      memory: 1Mi
+      cpu: 25m
+    limits:
+      memory: 20Gi
+      cpu: '2'
+  priority_class_name: igz-workload-medium
+  preemption_mode: prevent
+  min_replicas: 1
+  max_replicas: 4
+  source: ''
+  function_kind: serving_v2
+  secret_sources: []
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: app.iguazio.com/lifecycle
+            operator: NotIn
+            values:
+            - preemptible
+          - key: cloud.google.com/gke-preemptible
+            operator: NotIn
+            values:
+            - 'true'
+          - key: cloud.google.com/gke-spot
+            operator: NotIn
+            values:
+            - 'true'
+  tolerations: null
+  security_context: {}
+verbose: false
