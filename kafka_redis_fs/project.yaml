@@ -9,7 +9,6 @@ spec:
     error_topic: error_topic__fs_1
     broker: my-kafka.default-tenant.svc.cluster.local:9092
     redis_path: redis://redis-test-master.default-tenant.svc.cluster.local:6379
-    source_path: ./data/data_ingest.csv
   functions: []
   workflows: []
   artifacts: []
