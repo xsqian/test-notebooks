@@ -1,0 +1,19 @@
+kind: project
+metadata:
+  name: kafka-fs-test-shapira
+  created: '2022-12-05T11:54:37.857000'
+spec:
+  params:
+    input_topic: input_topic_fs_1
+    output_topic: output_topic_fs_1
+    error_topic: error_topic__fs_1
+    broker: my-kafka.default-tenant.svc.cluster.local:9092
+    redis_path: redis://redis-test-master.default-tenant.svc.cluster.local:6379
+  functions: []
+  workflows: []
+  artifacts: []
+  source: ''
+  desired_state: online
+  owner: shapira
+status:
+  state: online
