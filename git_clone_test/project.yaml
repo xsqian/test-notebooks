@@ -29,6 +29,6 @@ spec:
     status:
       state: created
   artifact_path: s3://testbucket-igz-temp/
-  source: git://github.com/GiladShapira94/test-notebooks.git
-  origin_url: git://github.com/GiladShapira94/test-notebooks.git
+  source: git://github.com/mlrun/test-notebooks.git
+  origin_url: git://github.com/mlrun/test-notebooks.git
   desired_state: online
