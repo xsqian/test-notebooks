@@ -1,3 +1,17 @@
+# Copyright 2018 Iguazio
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 import os
 from typing import Tuple
 
@@ -25,10 +39,10 @@ def set_labels_from_function_and_wrapper(context: mlrun.MLClientCtx = None):
 
 @mlrun.handler(
     outputs=[
-        ("my_array", mlrun.ArtifactType.DATASET),
-        "my_df:dataset",
-        ("my_dict", mlrun.ArtifactType.DATASET),
-        ("my_list", "dataset"),
+        "my_array",
+        "my_df : dataset",
+        "my_dict: dataset",
+        "my_list :dataset",
     ]
 )
 def log_dataset() -> Tuple[np.ndarray, pd.DataFrame, dict, list]:
@@ -42,7 +56,7 @@ def log_dataset() -> Tuple[np.ndarray, pd.DataFrame, dict, list]:
 
 @mlrun.handler(
     outputs=[
-        ("my_dir", mlrun.ArtifactType.DIRECTORY),
+        "my_dir: directory",
     ]
 )
 def log_directory(path: str) -> str:
@@ -56,7 +70,7 @@ def log_directory(path: str) -> str:
 
 @mlrun.handler(
     outputs=[
-        ("my_file", mlrun.ArtifactType.FILE),
+        "my_file: file",
     ]
 )
 def log_file(path: str) -> str:
@@ -67,11 +81,7 @@ def log_file(path: str) -> str:
     return my_file
 
 
-@mlrun.handler(
-    outputs=[
-        ("my_object", mlrun.ArtifactType.OBJECT),
-    ]
-)
+@mlrun.handler(outputs=["my_object : object"])
 def log_object() -> Pipeline:
     encoder_to_imputer = Pipeline(
         steps=[
@@ -86,11 +96,7 @@ def log_object() -> Pipeline:
     return encoder_to_imputer
 
 
-@mlrun.handler(
-    outputs=[
-        ("my_plot", mlrun.ArtifactType.PLOT),
-    ]
-)
+@mlrun.handler(outputs=["my_plot: plot"])
 def log_plot() -> plt.Figure:
     my_plot, axes = plt.subplots()
     axes.plot([1, 2, 3, 4])
@@ -99,10 +105,7 @@ def log_plot() -> plt.Figure:
 
 @mlrun.handler(
     outputs=[
-        (
-            "my_int",
-            mlrun.ArtifactType.RESULT,
-        ),
+        "my_int",
         "my_float",
         "my_dict: result",
         "my_array:result",
@@ -141,12 +144,7 @@ def log_with_none_values(
     )
 
 
-@mlrun.handler(
-    outputs=[
-        ("wrapper_dataset", "dataset"),
-        ("wrapper_result", mlrun.ArtifactType.RESULT),
-    ]
-)
+@mlrun.handler(outputs=["wrapper_dataset: dataset", "wrapper_result: result"])
 def log_from_function_and_wrapper(context: mlrun.MLClientCtx = None):
     if context:
         context.log_result(key="context_result", value=1)
@@ -169,8 +167,8 @@ def parse_inputs_from_type_hints(
     return (my_encoder.transform(my_data) + add * mul).tolist()
 
 
-@mlrun.handler(inputs={"my_data": np.ndarray})
-def parse_inputs_from_wrapper(my_data, my_encoder, add, mul: int = 2):
+@mlrun.handler(inputs={"my_data": list})
+def parse_inputs_from_wrapper_using_types(my_data, my_encoder, add, mul: int = 2):
     if isinstance(my_encoder, mlrun.DataItem):
         my_encoder = my_encoder.local()
         with open(my_encoder, "rb") as pickle_file:
@@ -178,7 +176,25 @@ def parse_inputs_from_wrapper(my_data, my_encoder, add, mul: int = 2):
     return (my_encoder.transform(my_data) + add * mul).tolist()
 
 
-@mlrun.handler(outputs=[("error_numpy", mlrun.ArtifactType.DATASET)])
+@mlrun.handler(
+    inputs={
+        "my_list": "list",
+        "my_array": "numpy.ndarray",
+        "my_encoder": "sklearn.pipeline.Pipeline",
+    },
+    outputs=["result"],
+)
+def parse_inputs_from_wrapper_using_strings(
+    my_list, my_array, my_df, my_encoder, add, mul: int = 2
+):
+    if isinstance(my_df, mlrun.DataItem):
+        my_df = my_df.as_df()
+    assert my_list == [["A"], ["B"], [""]]
+    assert isinstance(my_encoder, Pipeline)
+    return int((my_df.sum().sum() + my_array.sum() + add) * mul)
+
+
+@mlrun.handler(outputs=["error_numpy"])
 def raise_error_while_logging():
     return np.ones(shape=(7, 7, 7))
 
@@ -190,10 +206,10 @@ class MyClass:
 
     @mlrun.handler(
         outputs=[
-            ("my_array", mlrun.ArtifactType.DATASET),
-            "my_df:dataset",
-            ("my_dict", mlrun.ArtifactType.DATASET),
-            ("my_list", "dataset"),
+            "my_array:dataset",
+            "my_df : dataset",
+            "my_dict :dataset",
+            "my_list: dataset",
         ]
     )
     def log_dataset(self) -> Tuple[np.ndarray, pd.DataFrame, dict, list]:
@@ -204,11 +220,7 @@ class MyClass:
             [["A"], ["B"], [""]],
         )
 
-    @mlrun.handler(
-        outputs=[
-            ("my_object", mlrun.ArtifactType.OBJECT),
-        ]
-    )
+    @mlrun.handler(outputs=["my_object: object"])
     def log_object(self) -> Pipeline:
         encoder_to_imputer = Pipeline(
             steps=[
