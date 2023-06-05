@@ -15,7 +15,7 @@ def init_functions(functions: dict, project=None, secrets=None):
 def kfpipeline():
 
     # Fetch the data
-    ingest = funcs['fetch_data'].as_step(
+    ingest = funcs['fetch-data'].as_step(
         inputs={'dataset': 's3://testbucket-igz-temp/cancer-dataset.csv'},
         outputs=['dataset'])
 
