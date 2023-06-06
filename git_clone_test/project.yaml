@@ -4,7 +4,7 @@ metadata:
 spec:
   functions:
   - url: ./fetch_data.py
-    name: fetch_data
+    name: fetch-data
     kind: job
     image: mlrun/mlrun
     handler: fetch_data
