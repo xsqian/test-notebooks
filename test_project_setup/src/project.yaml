@@ -7,16 +7,16 @@ spec:
     secrets_file: mock_secrets.env
     default_image: mlrun/mlrun
   functions:
-  - url: src/data.py
+  - url: data.py
     name: get-data
     kind: job
     handler: get_data
-  - url: src/train.py
+  - url: train.py
     name: train
     kind: job
     handler: train_model
   workflows:
-  - path: src/main_workflow.py
+  - path: main_workflow.py
     name: main
   artifacts: []
   conda: ''

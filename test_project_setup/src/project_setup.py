@@ -22,20 +22,20 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
     # MLRun Functions
     project.set_function(
         name="get-data",
-        func="src/data.py",
+        func="data.py",
         kind="job",
         handler="get_data",
     )
 
     project.set_function(
         name="train",
-        func="src/train.py",
+        func="train.py",
         kind="job",
         handler="train_model",
     )
 
     # MLRun Workflows
-    project.set_workflow("main", "src/main_workflow.py")
+    project.set_workflow("main", "main_workflow.py")
 
     # Save and return the project:
     project.save()
