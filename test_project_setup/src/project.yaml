@@ -1,0 +1,30 @@
+kind: project
+metadata:
+  name: test-project-setup
+spec:
+  params:
+    source: https://github.com/mlrun/test-notebooks#main
+    secrets_file: mock_secrets.env
+    default_image: mlrun/mlrun
+  functions:
+  - url: data.py
+    name: get-data
+    kind: job
+    handler: get_data
+  - url: train.py
+    name: train
+    kind: job
+    handler: train_model
+  workflows:
+  - path: main_workflow.py
+    name: main
+  artifacts: []
+  conda: ''
+  source: https://github.com/mlrun/test-notebooks#main
+  load_source_on_run: true
+  desired_state: online
+  default_image: mlrun/mlrun
+  build:
+    commands: []
+    requirements: []
+  custom_packagers: []
