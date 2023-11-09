@@ -5,7 +5,7 @@ spec:
   params:
     source: https://github.com/mlrun/test-notebooks#main
     secrets_file: mock_secrets.env
-    default_image: mlrun/mlrun:1.5.1
+    default_image: mlrun/mlrun
   functions:
   - url: src/data.py
     name: get-data
@@ -23,7 +23,7 @@ spec:
   source: https://github.com/mlrun/test-notebooks#main
   load_source_on_run: true
   desired_state: online
-  default_image: mlrun/mlrun:1.5.1
+  default_image: mlrun/mlrun
   build:
     commands: []
     requirements: []
